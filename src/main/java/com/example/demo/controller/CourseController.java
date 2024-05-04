@@ -98,5 +98,16 @@ public class CourseController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id){
+        CourseValidation.checkId(Long.valueOf(id));
+        courses.stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ApiException("record not found with id " + id, HttpStatus.NOT_FOUND));
+
+        courses.remove(course);
+    }
+
 
 }
