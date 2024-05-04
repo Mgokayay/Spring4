@@ -77,4 +77,26 @@ public class CourseController {
         }
 
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> update(@PathVariable Long id, @RequestBody Course course){
+        CourseValidation.checkId(id);
+        CourseValidation.checkCredit(course.getCredit());
+        CourseValidation.checkName(course.getName());
+
+        Course existingCourse = courses.stream()
+                .filter(c -> c.getName().equalsIgnoreCase(course.getName()))
+                .findAny()
+                .orElseThrow(() -> new ApiException("record not found with id " + id, HttpStatus.NOT_FOUND));
+
+        int indexOfExistingCourse = courses.indexOf(existingCourse);
+        course.setId(Math.toIntExact(id));
+        courses.set(indexOfExistingCourse,course);
+        Integer totalGpa = getTotalGpa(course);
+        ApiResponse apiResponse = new ApiResponse(courses.get(indexOfExistingCourse),totalGpa);
+        return new ResponseEntity<>(apiResponse,HttpStatus.OK);
+
+    }
+
+
 }
