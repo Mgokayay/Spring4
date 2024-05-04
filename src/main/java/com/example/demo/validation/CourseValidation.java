@@ -29,4 +29,10 @@ public class CourseValidation {
             throw new ApiException("course already exist with name: " + name,HttpStatus.BAD_REQUEST);
         }
     }
+
+    public static void checkId(Long id) {
+        if(id == null || id < 0){
+            throw new ApiException("Id can not be null or less than zero " ,HttpStatus.NOT_FOUND);
+        }
+    }
 }
